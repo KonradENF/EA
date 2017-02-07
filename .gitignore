@@ -32,3 +32,16 @@
 # Folder
 ext/
 old/
+
+gui/obj/
+gui/bin/
+
+editor/obj/
+editor/bin/
+
+editor/editor_build_log.html
+*.depend
+*.html
+*.rc
+editor/editor.cscope_file_list
+editor/editor.cbp
