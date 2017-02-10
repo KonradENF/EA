@@ -1,5 +1,12 @@
 ####### The starting point for the script is the bottom #######
-$absoluteDir = $PSScriptRoot
+$absoluteDir = $PSScriptRoot 
+
+if($args[0]){
+ $absoluteDir = $args[0]
+}
+
+
+echo $absoluteDir
 
 if(!(Test-Path -Path $absoluteDir)){ 
    return
@@ -24,8 +31,9 @@ $wxWidgetsDirInclude = $wxWidgetsDir + "\include"
 
 $temp = $absoluteDir + "\temp"
 
-$make = "mingw32-make.exe"
-$cmake ="cmake.exe"
+$make = "mingw32-make"
+$cmake ="cmake"
+$git = "git"
 
 $projects = @($editorDir,$guiDir,$testDir)
 
@@ -68,7 +76,7 @@ function Install-WxWidgets{
         cd $temp               
                  
         echo "Download..."
-        $proc = Start-Process "git.exe" "clone https://github.com/wxWidgets/wxWidgets"  -PassThru -Wait
+        $proc = Start-Process $git "clone https://github.com/wxWidgets/wxWidgets"  -PassThru -Wait
 
         echo "Make..."
         $wxWidgetsTempPath = $temp+"\wxWidgets"
@@ -112,7 +120,7 @@ function Install-GTest{
         $gtestPathTemp = $googlePath + "\googletest"      
                 
         echo "Download..."
-        $proc = Start-Process "git.exe" "clone https://github.com/google/googletest" -NoNewWindow -PassThru -Wait
+        $proc = Start-Process $git "clone https://github.com/google/googletest" -NoNewWindow -PassThru -Wait
         cd $gtestPathTemp
         
         echo "CMake..."
