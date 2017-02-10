@@ -36,6 +36,10 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	SetMinSize(wxSize(640,480));
     SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 
+    menuBar = new MenuBar();
+
+    SetMenuBar(menuBar);
+
     centerPanel  = new ViewPanel(this);
 
 

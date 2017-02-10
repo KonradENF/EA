@@ -5,6 +5,7 @@
 
 #include <wx/panel.h>
 
+#include <wx/dirctrl.h>
 
 
 class ProjectView : public wxPanel
@@ -13,6 +14,9 @@ public:
     // Constructor
     ProjectView(wxWindow *parent);
     ~ProjectView();
+
+private:
+    wxGenericDirCtrl *fileTree;
 };
 
 

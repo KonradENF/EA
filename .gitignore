@@ -36,6 +36,8 @@ old/
 gui/obj/
 gui/bin/
 
+test/result/
+
 editor/obj/
 editor/bin/
 
@@ -45,3 +47,6 @@ editor/editor_build_log.html
 *.rc
 editor/editor.cscope_file_list
 editor/editor.cbp
+*.layout
+*.cbp
+test/editor/Makefile2

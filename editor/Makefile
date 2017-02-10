@@ -1,3 +1,17 @@
+#Extern
+#GOOGLE
+GTEST_DIR = ../ext/google/gtest
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
+                $(GTEST_DIR)/include/gtest/internal/*.h
+
+GTEST_LIB_PATH = $(GTEST_DIR)/lib
+				
+GTEST_LIB = -lpthread
+
+GTEST_CPPFLAGS = -isystem $(GTEST_DIR)/include
+				
+
+
 WxWidgets 					= ..\\ext\\wxWidgets\\
 WxWidgetsInclude 			= $(WxWidgets)include
 WxWidgetsLibGccDLL 				= $(WxWidgets)lib\\gcc_dll
@@ -6,15 +20,16 @@ WxWidgetsLibGccDLLCustom 	= $(WxWidgetsLibGccDLL)\$(WxWidgetsLibGccDLLCustomName
 WxWidgetsLibGccDLLMSWU 		= $(WxWidgetsLibGccDLL)\mswu
 
 CC				=	mingw32-g++
-CFLAGS			=	-pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -Wall -g -std=c++11 -I$(WxWidgetsInclude) -I$(WxWidgetsLibGccDLLMSWU) -c 
-LDFLAGS			=	-L$(WxWidgetsLibGccDLL) -mthreads  -lwxmsw30u -mwindows
+CFLAGS			=	-pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -Wall -g -std=c++11 -I$(WxWidgetsInclude) -I$(WxWidgetsLibGccDLLMSWU) -I$(GTEST_DIR) -c 
+LDFLAGS			=	-L$(WxWidgetsLibGccDLL) -L$(GTEST_LIB_PATH) -mthreads  -lwxmsw30u -mwindows $(GTEST_LIB)
 
 
 SOURCES = $(wildcard *.cpp)	\
 		$(wildcard view/*.cpp) \
 		$(wildcard view/project/*.cpp) \
 		$(wildcard view/console/*.cpp) \
-		$(wildcard view/content/*.cpp) 
+		$(wildcard view/content/*.cpp) \
+		$(wildcard menu/*.cpp) 
 #csrc = $(wildcard src/*.c) \
 #       $(wildcard src/engine/*.c) \
 #       $(wildcard src/audio/*.c)
@@ -59,6 +74,7 @@ install :
 	if not exist "./obj/view/project" mkdir "./obj/view/project"
 	if not exist "./obj/view/console" mkdir "./obj/view/console"
 	if not exist "./obj/view/content" mkdir "./obj/view/content"
+	if not exist "./obj/menu" mkdir "./obj/menu"
 	copy "$(WxWidgetsLibGccDLLCustom)" "$(BINDIR)/$(WxWidgetsLibGccDLLCustomName)" >NUL
 	
 .PHONY : clean

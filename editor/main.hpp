@@ -15,7 +15,7 @@
 #include "application.hpp"
 
 #include "view/view.hpp"
-
+#include "menu/menu.hpp"
 
 
 class MainFrame: public wxFrame
@@ -25,6 +25,7 @@ class MainFrame: public wxFrame
         ~MainFrame();
     protected:
         ViewPanel *centerPanel;
+        MenuBar *menuBar;
 
     private:
         enum
