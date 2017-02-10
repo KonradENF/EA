@@ -7,6 +7,8 @@ if($args[0]){
 
 
 echo $absoluteDir
+echo $args[0]
+
 
 if(!(Test-Path -Path $absoluteDir)){ 
    return
@@ -33,7 +35,7 @@ $temp = $absoluteDir + "\temp"
 
 $make = "mingw32-make"
 $cmake ="cmake"
-$git = "git"
+$git = "git.exe"
 
 $projects = @($editorDir,$guiDir,$testDir)
 
