@@ -11,6 +11,7 @@ echo $args[0]
 
 
 if(!(Test-Path -Path $absoluteDir)){ 
+   echo $absoluteDir + "Pass not exist"
    exit
 }
  
@@ -20,6 +21,9 @@ if(!(Test-Path -Path $absoluteDir)){
 $editorDir = $absoluteDir + "\editor"
 $guiDir = $absoluteDir + "\gui"
 $testDir = $absoluteDir + "\test"
+$editorTestDir = $testDir + "\editor"
+$editorTestObjDir = $editorTestDir + "\obj"
+
 $testResultDir = $testDir + "\result"
 
 $extDir = $absoluteDir + "\ext"
@@ -158,7 +162,7 @@ function Install-GTest{
 
 function CheckPath
 {
-    $path = @($temp, $editorDir,$guiDir,$testDir,$testResultDir,$extDir)
+    $path = @($temp, $editorDir,$guiDir,$testDir,$editorTestDir, $editorTestObjDir,$testResultDir,$extDir)
     
     	foreach ($currentPath in $path)
 		{            
@@ -182,6 +186,8 @@ function Check-SystemPath{
     } 
 
 }
+
+
 
 Check-SystemPath
 Install-Command
