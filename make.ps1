@@ -183,18 +183,7 @@ function Check-SystemPath{
 
 }
 
-function Clear-Workspace{
-$exclude = $extDir + "*"
-
-Get-ChildItem -Path  $absoluteDir -Recurse |
-Select -ExpandProperty FullName |
-Where {$_ -notlike $exclude} |
-sort length -Descending |
-Remove-Item -force 
-}
-
 Check-SystemPath
-Clear-Workspace
 Install-Command
 
 BuildTest-Command
