@@ -11,7 +11,7 @@ echo $args[0]
 
 
 if(!(Test-Path -Path $absoluteDir)){ 
-   return
+   exit
 }
  
 
@@ -20,6 +20,7 @@ if(!(Test-Path -Path $absoluteDir)){
 $editorDir = $absoluteDir + "\editor"
 $guiDir = $absoluteDir + "\gui"
 $testDir = $absoluteDir + "\test"
+$testResultDir = $testDir + "\result"
 
 $extDir = $absoluteDir + "\ext"
 
@@ -36,6 +37,7 @@ $temp = $absoluteDir + "\temp"
 $make = "mingw32-make"
 $cmake ="cmake"
 $git = "git.exe"
+$python ="python.exe"
 
 $projects = @($editorDir,$guiDir,$testDir)
 
@@ -156,7 +158,7 @@ function Install-GTest{
 
 function CheckPath
 {
-    $path = @($temp, $editorDir,$guiDir,$testDir,$extDir)
+    $path = @($temp, $editorDir,$guiDir,$testDir,$testResultDir,$extDir)
     
     	foreach ($currentPath in $path)
 		{            
@@ -167,5 +169,21 @@ function CheckPath
         }
 }
 
+function Check-SystemPath{
+    $requirement = @($make, $cmake,$git, $python)
+    $requirement = @($make, $cmake,$git)
+    foreach ($currentRequirement in $requirement)
+    {
+            if (!(Get-Command $currentRequirement -ErrorAction SilentlyContinue)) 
+            { 
+                echo "ERROR"$currentRequirement" not found ..."
+                exit
+            }
+    } 
+
+}
+
+Check-SystemPath
 Install-Command
+
 BuildTest-Command
