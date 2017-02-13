@@ -14,6 +14,7 @@ if(!(Test-Path -Path $absoluteDir)){
    exit
 }
  
+cd $absoluteDir
 
 function Clear-Workspace{
 $exclude = $extDir + "*"
