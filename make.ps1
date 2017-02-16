@@ -181,10 +181,12 @@ function CheckPath
 
         $guiWxWidgetsDll = $guiDir+"/"+$wxWidgetsDll
         $source = $wxWidgetsDirLib+"/"+$wxWidgetsDll
-        Test-Path -
-        
+             
         if(!(Get-Item $guiWxWidgetsDll -ErrorAction SilentlyContinue)){
-            Copy-Item -path $source -destination $guiDir 
+            #If item exist
+            if(Get-Item $source -ErrorAction SilentlyContinue){
+                Copy-Item -path $source -destination $guiDir 
+            }
         }
         
 }
