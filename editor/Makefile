@@ -1,95 +1,40 @@
-#Extern
-#GOOGLE
-GTEST_DIR = ../ext/google/gtest
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
-
-GTEST_LIB_PATH = $(GTEST_DIR)/lib
-				
-GTEST_LIB = -lpthread
-
-GTEST_CPPFLAGS = -isystem $(GTEST_DIR)/include
-				
+EDITOR_DIR = $(DIR)/editor
 
 
-WxWidgets 					= ..\\ext\\wxWidgets\\
-WxWidgetsInclude 			= $(WxWidgets)include
-WxWidgetsLibGccDLL 				= $(WxWidgets)lib\\gcc_dll
-WxWidgetsLibGccDLLCustomName 	= wxmsw30u_gcc_custom.dll
-WxWidgetsLibGccDLLCustom 	= $(WxWidgetsLibGccDLL)\$(WxWidgetsLibGccDLLCustomName)
-WxWidgetsLibGccDLLMSWU 		= $(WxWidgetsLibGccDLL)\mswu
 
-CC				=	mingw32-g++
-CFLAGS			=	-pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -Wall -g -std=c++11 -I$(WxWidgetsInclude) -I$(WxWidgetsLibGccDLLMSWU) -I$(GTEST_DIR) -c 
-LDFLAGS			=	-L$(WxWidgetsLibGccDLL) -L$(GTEST_LIB_PATH) -mthreads  -lwxmsw30u -mwindows $(GTEST_LIB)
+SOURCES = $(wildcard $(EDITOR_DIR)/*.cpp)	\
+			$(wildcard $(EDITOR_DIR)/menu/*.cpp) \
+			$(wildcard $(EDITOR_DIR)/view/*.cpp) \
+			$(wildcard $(EDITOR_DIR)/view/project/*.cpp) \
+			$(wildcard $(EDITOR_DIR)/view/content/*.cpp) \
+			$(wildcard $(EDITOR_DIR)/view/console/*.cpp)
+
+#SOURCES = C:/Users/kfahrendholz/Documents/GitHub/EA/test/editor/testgtest.cpp
+OBJDIR		:= $(EDITOR_DIR)/obj
+BINDIR		:= $(EDITOR_DIR)/bin
+
+EXECUTABLE = $(EDITOR_DIR)/Editor.exe
 
 
-SOURCES = $(wildcard *.cpp)	\
-		$(wildcard view/*.cpp) \
-		$(wildcard view/project/*.cpp) \
-		$(wildcard view/console/*.cpp) \
-		$(wildcard view/content/*.cpp) \
-		$(wildcard menu/*.cpp) 
-#csrc = $(wildcard src/*.c) \
-#       $(wildcard src/engine/*.c) \
-#       $(wildcard src/audio/*.c)
+#OBJECTS = $(SOURCES:%.cpp=%/obj.o)
 
-OBJDIR		:= ./obj/
-BINDIR		:= ./bin
+OBJECTS  := $(SOURCES:$(EDITOR_DIR)/%.cpp=$(OBJDIR)/%.o)
 
-OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
+$(OBJECTS): $(OBJDIR)/%.o : $(EDITOR_DIR)/%.cpp
+	$(CXX) $(CXX_FLAGS) -o $@ -c $<
+	
+#$(OBJDIR)%.o: %.cpp
+#	$(CXX) $(CXX_FLAGS) -o $@ -c $<
 
-EXECUTABLE		=	$(BINDIR)/Editor.exe
-
-RM				=	del /S
-RMD				=	rd
-
-all: install introallstart $(SOURCES) $(EXECUTABLE) introallend 	
-
+editor_editor: $(EXECUTABLE) 
+	
 
 $(EXECUTABLE): $(OBJECTS) 
-	$(CC) -o $@ $(OBJECTS) $(LDFLAGS) 
+	$(CXX) $(CXX_FLAGS) $(LDFLAGS)  $(WXWIDGETS_LIBS) -lpthread   $^ -o $@ $(GTEST_LIBS)
 
-${OBJDIR}%.o: %.cpp
-	$(CC) $(CFLAGS) -o $@ -c $<
-	
-allclean: clean all
 
-.PHONY : introallstart
-.SILENT : introallstart
-
-introallstart: 
-	@echo  Start building editor...	
-	
-.PHONY : introallend
-introallend: 
-	@echo  ...End building editor
-
-.PHONY : install
-.SILENT : install
+#.PHONY : install
+#.SILENT : install
 install :
 	if not exist "./bin" mkdir "./bin"
 	if not exist "./obj" mkdir "./obj"
-	if not exist "./obj/view" mkdir "./obj/view"
-	if not exist "./obj/view/project" mkdir "./obj/view/project"
-	if not exist "./obj/view/console" mkdir "./obj/view/console"
-	if not exist "./obj/view/content" mkdir "./obj/view/content"
-	if not exist "./obj/menu" mkdir "./obj/menu"
-	copy "$(WxWidgetsLibGccDLLCustom)" "$(BINDIR)/$(WxWidgetsLibGccDLLCustomName)" >NUL
-	
-.PHONY : clean
-.SILENT : clean
-clean:
-	@echo Execute clean
-	$(RM) *.o >NUL
-	$(RM) *.exe >NUL
-	$(RM) *.dll >NUL
-	$(RM) *.res >NUL
-	@echo End clean
-	
-#if exist "$(BINDIR)" $(RMD) "$(BINDIR)" >NUL
-#if exist "$(OBJDIR)" $(RMD) "$(OBJDIR)" >NUL
-	
-	
-start: all
-	$(EXECUTABLE)

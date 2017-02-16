@@ -26,4 +26,6 @@ sort length -Descending |
 Remove-Item -force 
 }
 
+Sleep 5
+
 Clear-Workspace

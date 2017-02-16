@@ -35,6 +35,7 @@ $gTestDirInclude = $gTestDir+"\include"
 $wxWidgetsDir = $extDir +"\wxwidgets"
 $wxWidgetsDirLib = $wxWidgetsDir + "\lib"
 $wxWidgetsDirInclude = $wxWidgetsDir + "\include"
+$wxWidgetsDll = "wxmsw311u_gcc_custom.dll"
 
 $temp = $absoluteDir + "\temp"
 
@@ -49,14 +50,29 @@ echo $absoluteDir
 
 cd $absoluteDir
 
-function BuildTest-Command{
-  
-    Install-Command
-    cd $absoluteDir
 
+
+function BuildTest-Command{
+    cd $absoluteDir
     echo "Execute Unittest..."
 
     $proc = Start-Process $make "unittest"  -PassThru -Wait
+}
+
+function BuildEditor-Command{
+	MakeCommand("editor")
+}
+
+function MakeCommand($programm){
+    cd $absoluteDir
+    echo "Make build"$programm
+    $command = $programm + " -j4"
+	$proc = Start-Process $make $command  -PassThru -Wait
+		
+}
+
+function BuildGui-Command{
+    MakeCommand("gui")
 }
 
 function Install-Command
@@ -68,23 +84,12 @@ function Install-Command
 }
 
 function Install-WxWidgets{
-    $wxWidgetsPath = $temp + "\wxWidgets"
-    New-Item -ItemType directory -Path $wxWidgetsPath -Force | Out-Null
-    $wxWidgetsSource = $wxWidgetsPath + "\source.zip"
-    
-    #(New-Object net.WebClient).DownloadFile('https://github.com/wxWidgets/wxWidgets/archive/v3.0.2.zip',$wxWidgetsSource)
-       
-
-    Expand-Archive -Path $wxWidgetsSource -DestinationPath $wxWidgetsPath -Force  
-}
-
-function Install-WxWidgets{
     if(!(Test-Path -Path $wxWidgetsDir)){ 
         echo "Install wxWidgets..."
         cd $temp               
                  
         echo "Download..."
-        $proc = Start-Process $git "clone https://github.com/wxWidgets/wxWidgets"  -PassThru -Wait
+        #$proc = Start-Process $git "clone https://github.com/wxWidgets/wxWidgets"  -PassThru -Wait
 
         echo "Make..."
         $wxWidgetsTempPath = $temp+"\wxWidgets"
@@ -92,7 +97,7 @@ function Install-WxWidgets{
 
         cd $wxWidgetsTempBuildPath
 
-        $proc = Start-Process $make "-f makefile.gcc BUILD=release SHARED=1 MONOLITHIC=1 UNICODE=1 CXXFLAGS=-std=gnu++11"  -PassThru -Wait  
+        $proc = Start-Process $make "-j4 -f makefile.gcc  BUILD=release SHARED=1 MONOLITHIC=1 UNICODE=1 CXXFLAGS=-std=gnu++11"  -PassThru -Wait  
 
         cd $wxWidgetsTempPath
 
@@ -109,7 +114,7 @@ function Install-WxWidgets{
         Start-Sleep 5
         
 
-        Remove-Item $wxWidgetsTempPath -recurse -Force 
+        #Remove-Item $wxWidgetsTempPath -recurse -Force 
         
         echo "wxWidgets successful installed"
     }
@@ -135,7 +140,9 @@ function Install-GTest{
         $command = "-G `"MinGW Makefiles`" -DCMAKE_CXX_FLAGS:STRING=`"-DWINVER=0x0500`" ."
         $proc = Start-Process $cmake $command -NoNewWindow -PassThru -Wait
         echo "Make..."
-        $proc = Start-Process $make -Wait    -PassThru            
+
+        $command = "-j4"
+        $proc = Start-Process $make $command -Wait    -PassThru            
    
         
         
@@ -171,6 +178,15 @@ function CheckPath
                 New-Item -ItemType directory -Path $currentPath -Force | Out-Null
             }
         }
+
+        $guiWxWidgetsDll = $guiDir+"/"+$wxWidgetsDll
+        $source = $wxWidgetsDirLib+"/"+$wxWidgetsDll
+        Test-Path -
+        
+        if(!(Get-Item $guiWxWidgetsDll -ErrorAction SilentlyContinue)){
+            Copy-Item -path $source -destination $guiDir 
+        }
+        
 }
 
 function Check-SystemPath{
@@ -186,10 +202,8 @@ function Check-SystemPath{
     } 
 
 }
+CheckPath
+BuildGui-Command
+#Install-WxWidgets
 
-
-
-Check-SystemPath
-Install-Command
-
-BuildTest-Command
+#Install-WxWidgets
