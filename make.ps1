@@ -89,7 +89,7 @@ function Install-WxWidgets{
         cd $temp               
                  
         echo "Download..."
-        #$proc = Start-Process $git "clone https://github.com/wxWidgets/wxWidgets"  -PassThru -Wait
+        $proc = Start-Process $git "clone https://github.com/wxWidgets/wxWidgets"  -PassThru -Wait
 
         echo "Make..."
         $wxWidgetsTempPath = $temp+"\wxWidgets"
@@ -99,7 +99,7 @@ function Install-WxWidgets{
 
         $proc = Start-Process $make "-j4 -f makefile.gcc  BUILD=release SHARED=1 MONOLITHIC=1 UNICODE=1 CXXFLAGS=-std=gnu++11"  -PassThru -Wait  
 
-        cd $wxWidgetsTempPath
+        cd $wxWidgetsTempPath 
 
         $wxWidgetsTempPathInclude = $wxWidgetsTempPath + "\include"
         $wxWidgetsTempPathLib = $wxWidgetsTempPath + "\lib\gcc_dll\*"
