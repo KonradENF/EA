@@ -205,7 +205,8 @@ function Check-SystemPath{
 
 }
 CheckPath
-BuildGui-Command
+Install-Command
+#BuildGui-Command
 #Install-WxWidgets
 
 #Install-WxWidgets
